@@ -1,0 +1,50 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Web App
+        run: npm run build
+
+      - name: Setup Electron
+        run: |
+          npm install -D electron electron-builder
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json'));
+            pkg.main = 'main.js';
+            pkg.build = {
+              appId: 'com.aistudio.game',
+              productName: 'WebShooter',
+              win: { target: 'nsis' },
+              directories: { output: 'release' }
+            };
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+          "
+          echo "const { app, BrowserWindow } = require('electron'); const path = require('path'); function createWindow () { const win = new BrowserWindow({ width: 1280, height: 720, webPreferences: { nodeIntegration: true } }); win.setMenuBarVisibility(false); win.loadFile('dist/index.html'); } app.whenReady().then(createWindow);" > main.js
+
+      - name: Build EXE
+        run: npx electron-builder --win
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Windows-EXE
+          path: release/*.exe

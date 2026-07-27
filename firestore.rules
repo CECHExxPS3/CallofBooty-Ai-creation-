@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid} {
+      allow read, create, update, delete: if true;
+    }
+    match /match_history/{matchId} {
+      allow read, create, update, delete: if true;
+    }
+    match /weapon_stats/{uid} {
+      allow read, create, update, delete: if true;
+    }
+  }
+}
+
+

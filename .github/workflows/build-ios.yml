@@ -1,0 +1,56 @@
+name: Build iOS IPA
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Web App
+        run: npm run build
+
+      - name: Setup Capacitor
+        run: |
+          npm install @capacitor/core @capacitor/ios
+          npm install -D @capacitor/cli
+          echo '{
+            "appId": "com.aistudio.game",
+            "appName": "WebShooter",
+            "webDir": "dist",
+            "bundledWebRuntime": false
+          }' > capacitor.config.json
+          npx cap add ios
+          npx cap sync ios
+
+      - name: Build Unsigned iOS App
+        run: |
+          cd ios/App
+          # Build without code signing (can be sideloaded with tools like AltStore/TrollStore or signed later)
+          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -sdk iphoneos CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO SYMROOT=$(PWD)/build build
+          
+          # Package into IPA format
+          cd build/Release-iphoneos
+          mkdir Payload
+          mv App.app Payload/
+          zip -r ../../../WebShooter.ipa Payload
+          cd ../../..
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iOS-IPA
+          path: ios/App/WebShooter.ipa

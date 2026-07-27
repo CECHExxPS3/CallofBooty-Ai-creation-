@@ -1,0 +1,33 @@
+1910:      const fireRate = hacks.rapidFire ? 15 : game.activeWeapon.fireRate;
+1916:        game.burstPending = hacks.rapidFire ? 0 : wep.burstCount - 1;
+1942:      if (!hacks.unlimitedAmmo) {
+2015:      if (!hacks.noRecoil) {
+2089:              if (hacks.oneShot) dmg = 9999;
+2101:            if (hacks.oneShot) finalDamage = 9999;
+2106:            if (hacks.oneShot) finalDamage = 9999;
+2293:      if (hacks.godMode) return; // Invincible!
+2460:      if (hacks.autoHeal && !game.playerIsDead && game.playerHealth < 100) {
+2487:        const isAuto = game.activeWeapon.type === 'AR' || game.activeWeapon.type === 'LMG' || game.activeWeapon.type === 'SMG' || game.activeWeapon.name.includes('Auto') || hacks.fullAuto;
+2701:      const isAimbotActive = hacks.aimbotMode === 'ALWAYS' ||
+2702:                            (hacks.aimbotMode === 'ADS_ONLY' && game.isADS) ||
+2703:                            (hacks.aimbotMode === 'FOV_CIRCLE' && game.isADS);
+2716:          const targetHeight = hacks.aimbotTarget === 'BODY' ? 0.8 : 1.3;
+2720:          if (hacks.aimbotMode === 'FOV_CIRCLE') {
+2820:      const isEspFull = hacks.espMode === 'FULL_BODY';
+2824:        const espMode = entityHacks.espMode || hacks.espMode;
+2825:        const tracerLines = entityHacks.tracerLines || hacks.tracerLines;
+2997:        if (hacks.speedHack) moveSpeed *= 2.5; // Speed Hack
+2998:        if (hacks.insaneSpeed) moveSpeed *= 10.0; // Insane Speed Hack
+3040:        if (hacks.flyHack || config.spectatorMode) {
+3043:          } else if (hacks.flyHack) {
+3150:          game.playerVel.y = hacks.superJump ? 25.0 : 9.5; // Jump strength
+3803:      {hacks.aimbotMode === 'FOV_CIRCLE' && !gameRef.current.playerIsDead && hacks.fovVisibility !== 'HIDDEN' && (
+3807:            hacks.fovVisibility === 'OBVIOUS' 
+3814:            boxShadow: hacks.fovVisibility === 'OBVIOUS' ? '0 0 15px rgba(52, 211, 153, 0.2) inset' : 'none' 
+4091:                  <span className="text-[10px] text-slate-500">{hacks.espMode}</span>
+4099:                        hacks.espMode === mode
+4114:                  <span className="text-[10px] text-slate-500">{hacks.aimbotMode}</span>
+4123:                        hacks.aimbotMode === mode
+4144:                          hacks.aimbotTarget === target
+4155:                {hacks.aimbotMode === 'FOV_CIRCLE' && (
+4166:                            hacks.fovVisibility === vis

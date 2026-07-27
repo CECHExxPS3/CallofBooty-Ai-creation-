@@ -1,0 +1,6 @@
+{
+  "appId": "com.aistudio.fps",
+  "appName": "FPS Strike",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}

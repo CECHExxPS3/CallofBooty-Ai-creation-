@@ -1,0 +1,120 @@
+{
+  "project": "gen-lang-client-0104172640",
+  "collections": [
+    {
+      "name": "users",
+      "documentId": "uid",
+      "description": "User profiles and global statistics",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "uid": { "type": "string", "description": "Firebase Auth UID" },
+          "username": { "type": "string", "description": "Unique username" },
+          "username_lowercase": { "type": "string", "description": "Lowercase username for querying" },
+          "playerId": { "type": "string", "description": "Permanent 5-digit player ID (e.g., #12345)" },
+          "isGuest": { "type": "boolean", "description": "True if this is a temporary guest account" },
+          "isDeveloper": { "type": "boolean", "description": "True if this user has developer/admin privileges" },
+          "level": { "type": "number", "description": "Current player level" },
+          "xp": { "type": "number", "description": "Total experience points" },
+          "matchesPlayed": { "type": "number", "description": "Total matches played" },
+          "wins": { "type": "number", "description": "Total wins" },
+          "losses": { "type": "number", "description": "Total losses" },
+          "kills": { "type": "number", "description": "Total kills" },
+          "deaths": { "type": "number", "description": "Total deaths" },
+          "assists": { "type": "number", "description": "Total assists" },
+          "headshots": { "type": "number", "description": "Total headshots" },
+          "highestKillStreak": { "type": "number", "description": "Highest kill streak in a single match" },
+          "longestShot": { "type": "number", "description": "Longest kill distance" },
+          "shotsFired": { "type": "number", "description": "Total shots fired" },
+          "shotsHit": { "type": "number", "description": "Total shots hit" },
+          "damageDealt": { "type": "number", "description": "Total damage dealt" },
+          "damageTaken": { "type": "number", "description": "Total damage taken" },
+          "totalPlayTime": { "type": "number", "description": "Total time played in seconds" },
+          "createdAt": { "type": "string", "description": "ISO timestamp of account creation" },
+          "lastLogin": { "type": "string", "description": "ISO timestamp of last login" }
+        },
+        "required": ["uid", "username"]
+      },
+      "rules": {
+        "read": "request.auth != null",
+        "create": "request.auth != null && request.auth.uid == uid",
+        "update": "request.auth != null && (request.auth.uid == uid || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isDeveloper == true)",
+        "delete": "request.auth != null && (request.auth.uid == uid || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isDeveloper == true)"
+      }
+    },
+    {
+      "name": "match_history",
+      "documentId": "matchId",
+      "description": "Records of completed matches",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "matchId": { "type": "string" },
+          "date": { "type": "string" },
+          "map": { "type": "string" },
+          "gameMode": { "type": "string" },
+          "duration": { "type": "number" },
+          "players": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "uid": { "type": "string" },
+                "username": { "type": "string" },
+                "placement": { "type": "number" },
+                "kills": { "type": "number" },
+                "deaths": { "type": "number" },
+                "assists": { "type": "number" },
+                "damage": { "type": "number" },
+                "headshots": { "type": "number" },
+                "longestKill": { "type": "number" },
+                "killStreak": { "type": "number" },
+                "xpEarned": { "type": "number" }
+              }
+            }
+          }
+        },
+        "required": ["matchId", "date"]
+      },
+      "rules": {
+        "read": "request.auth != null",
+        "create": "request.auth != null",
+        "update": "request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isDeveloper == true",
+        "delete": "request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isDeveloper == true"
+      }
+    },
+    {
+      "name": "weapon_stats",
+      "documentId": "uid",
+      "description": "Weapon performance statistics per user",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "uid": { "type": "string" },
+          "weapons": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "kills": { "type": "number" },
+                "headshots": { "type": "number" },
+                "shotsFired": { "type": "number" },
+                "shotsHit": { "type": "number" },
+                "longestKill": { "type": "number" },
+                "timeUsed": { "type": "number" },
+                "xpEarned": { "type": "number" }
+              }
+            }
+          }
+        },
+        "required": ["uid"]
+      },
+      "rules": {
+        "read": "request.auth != null",
+        "create": "request.auth != null && request.auth.uid == uid",
+        "update": "request.auth != null && (request.auth.uid == uid || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isDeveloper == true)",
+        "delete": "request.auth != null && (request.auth.uid == uid || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isDeveloper == true)"
+      }
+    }
+  ]
+}

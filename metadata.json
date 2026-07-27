@@ -1,0 +1,10 @@
+{
+  "name": "Remix: Remix: Remix: Remix: Remix: Remix: Remix: Remix: Remix: Remix: Remix: Low-Poly 3D FPS Combat",
+  "description": "An optimized, high-action low-poly 3D first-person shooter featuring bot matches, multi-class system, and pre-match lobby.",
+  "requestFramePermissions": [
+    "pointerLock"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
